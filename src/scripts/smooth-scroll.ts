@@ -11,11 +11,6 @@ export function scrollToY(y: number) {
   else window.scrollTo({ top: y });
 }
 
-export function setScrollLocked(locked: boolean) {
-  if (locked) lenis?.stop();
-  else lenis?.start();
-}
-
 export function startSmoothScroll() {
   if (prefersReducedMotion()) return;
 

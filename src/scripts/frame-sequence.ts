@@ -24,17 +24,10 @@ interface DownloadJob {
 const pending: DownloadJob[] = [];
 let activeDownloads = 0;
 let activeSequence: FrameSequence | undefined;
-// Mientras la pantalla de carga espera, primero todos los "1 de cada 4" (luego vuelve a 3).
-let fineWeight = 3;
-export const preferCoarseFrames = (on: boolean) => {
-  fineWeight = on ? 1000 : 3;
-};
-// Avisa cada cuadro descargado (la pantalla de carga cuenta los que necesita).
-export const frameEvents = new EventTarget();
 const cost = ({ sequence, index }: DownloadJob) => {
   const distance = index - sequence.position;
   const steps = distance >= 0 ? distance : -distance * 2; // lo de adelante pesa la mitad que lo de atrás
-  return (sequence === activeSequence ? 0 : 1e6) + steps * (index % LOAD_STEP === 0 ? 1 : fineWeight);
+  return (sequence === activeSequence ? 0 : 1e6) + steps * (index % LOAD_STEP === 0 ? 1 : 3);
 };
 const pump = () => {
   while (activeDownloads < MAX_DOWNLOADS && pending.length > 0) {
@@ -150,7 +143,6 @@ export class FrameSequence {
       const response = await fetch(frameUrl(BASE, this.device, segmentId, localIndex));
       if (!response.ok) throw new Error(response.url);
       this.blobs[globalIndex] = await response.blob();
-      frameEvents.dispatchEvent(new CustomEvent('loaded', { detail: { segmentId, localIndex } }));
     } catch {
       // Un cuadro perdido se cubre con el más cercano al dibujar.
     }

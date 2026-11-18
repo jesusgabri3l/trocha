@@ -52,17 +52,17 @@ PageSpeed Insights on the [live demo](https://trocha-demo.vercel.app/), November
     <th width="50%">Desktop</th>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/pagespeed-mobile-2026-11-18-v2.png" alt="PageSpeed mobile: Performance 97, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
-    <td><img src="docs/screenshots/pagespeed-desktop-2026-11-18-v2.png" alt="PageSpeed desktop: Performance 100, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
+    <td><img src="docs/screenshots/pagespeed-mobile-2026-11-18-vercel.png" alt="PageSpeed mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
+    <td><img src="docs/screenshots/pagespeed-desktop-2026-11-18-vercel.png" alt="PageSpeed desktop: Performance 100, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
   </tr>
 </table>
 
 | PageSpeed | Mobile | Desktop |
 |---|---|---|
-| First Contentful Paint | 1.1 s | 0.2 s |
-| Largest Contentful Paint | 1.1 s | 0.2 s |
-| Cumulative Layout Shift | 0 | 0.018 |
-| Total Blocking Time | 10 ms | 0 ms |
+| First Contentful Paint | 1.1 s | 0.4 s |
+| Largest Contentful Paint | 1.1 s | 0.4 s |
+| Cumulative Layout Shift | 0.01 | 0.005 |
+| Total Blocking Time | 0 ms | 10 ms |
 
 ## Development
 

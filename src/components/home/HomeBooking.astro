@@ -21,7 +21,18 @@ const defaultWhatsappUrl = `https://wa.me/${SITE.whatsapp}?text=${encodeURICompo
         {ROUTES.map((route, index) => (
           <label class="booking__route" data-route={route.id}>
             <input class="booking__route-input" type="radio" name="route" value={route.id} checked={index === 0} data-price={route.price} data-label={`${route.number} ${route.name} (${route.destination})`} />
-            <img class="booking__route-image" src={`${base}/img/ruta-${route.id}.webp`} alt="" width="800" height="1000" loading="lazy" decoding="async" />
+            <img
+              class="booking__route-image"
+              src={`${base}/img/ruta-${route.id}-800.avif`}
+              srcset={`${base}/img/ruta-${route.id}-480.avif 480w, ${base}/img/ruta-${route.id}-800.avif 800w`}
+              sizes="(max-width: 767px) 78vw, min(30vw, 400px)"
+              alt=""
+              width="800"
+              height="1000"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="high"
+            />
             <span class="booking__route-body">
               <span class="booking__route-number">RUTA {route.number}</span>
               <span class="booking__route-name">{route.name}</span>

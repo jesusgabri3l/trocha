@@ -21,7 +21,7 @@ A landing page concept for a fictional brand. TROCHA is not a real business: the
   <tr>
     <td align="center" width="33%"><img src="docs/screenshots/mobile-hero-2026-11-18.jpg" alt="Hero on a phone: TROCHA above the rider and the 'Reservar ahora' button" width="100%" /><br /><sub>Hero</sub></td>
     <td align="center" width="33%"><img src="docs/screenshots/mobile-route-2026-11-18.jpg" alt="First route on a phone: the rider on a muddy trail, the route name BARRO in clay color and a compact ticket with the price and a reserve button" width="100%" /><br /><sub>Route</sub></td>
-    <td align="center" width="33%"><img src="docs/screenshots/mobile-booking-2026-11-18.jpg" alt="Booking on a phone: a swipeable card per route with its photo, name and price, then date, number of quads, total and the WhatsApp button" width="100%" /><br /><sub>Booking</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/mobile-booking-2026-11-18-hd.jpg" alt="Booking on a phone: a swipeable card per route with its photo, name and price, then date, number of quads, total and the WhatsApp button" width="100%" /><br /><sub>Booking</sub></td>
   </tr>
 </table>
 
@@ -30,7 +30,7 @@ A landing page concept for a fictional brand. TROCHA is not a real business: the
 - **The machine:** the quad bike and what's included (guide, helmet, insurance).
 - **Booking:** one card per route (a swipeable carousel on phones), a custom date picker and how many quads; the total updates and the WhatsApp button carries the full message.
 
-<img src="docs/screenshots/desktop-booking-2026-11-18.jpg" alt="Booking on desktop: three route cards (Barro, Arena, Montaña) with photo, duration and price, and a bar with date, quads, total and 'Reservar por WhatsApp'" width="100%" />
+<img src="docs/screenshots/desktop-booking-2026-11-18-hd.jpg" alt="Booking on desktop: three route cards (Barro, Arena, Montaña) with photo, duration and price, and a bar with date, quads, total and 'Reservar por WhatsApp'" width="100%" />
 
 ## How it's built
 

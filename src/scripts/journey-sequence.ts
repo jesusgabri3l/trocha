@@ -11,16 +11,6 @@ const routeIds = ROUTES.map(({ id }) => id as string);
 // Pasados estos puntos, la navbar y el marco ya no son los del hero.
 const JOURNEY_STARTED = 0.02;
 
-// Zoom suave [empieza, llega, se queda hasta, termina] (cuadros): tapa el cambio de cielo dentro de T1.
-const ZOOM_SCALE = 0.16;
-const zoomAt = (frame: number, zoom?: number[]) => {
-  if (!zoom) return 1;
-  const [a, b, c, d] = zoom as [number, number, number, number];
-  const t = frame < b ? (frame - a) / (b - a) : frame <= c ? 1 : 1 - (frame - c) / (d - c);
-  const eased = (1 - Math.cos(Math.PI * Math.min(1, Math.max(0, t)))) / 2;
-  return 1 + ZOOM_SCALE * eased;
-};
-
 const formatKm = (km: number) => km.toFixed(1).replace('.', ',').padStart(4, '0');
 
 export async function startJourney() {
@@ -63,7 +53,6 @@ export async function startJourney() {
     const frame = Math.min(segment.count - 1, Math.floor(local * segment.count));
 
     if (progress > 0) sequence.show(sequence.globalIndex(segment.id, frame));
-    canvas.style.scale = String(zoomAt(local * segment.count, 'zoom' in segment ? segment.zoom : undefined));
     const peak = segment.peak ?? Math.floor(segment.count / 2);
     if (segment.kind === 'route' && index === chapter && lastFrame >= 0 && lastFrame < peak && frame >= peak) shakeCanvas();
     lastFrame = frame;

@@ -51,7 +51,7 @@ const trackedAttributes = isStatic ? {} : { 'data-route-ticket': route.id };
 
   <p class="journey-ticket__price">{formatPrice(route.price)} <span>por cuatrimoto (hasta 2 personas)</span></p>
   <div class="journey-ticket__actions">
-    <a class="button button--small journey-ticket__action" href="#reserva" data-reserve-route={route.id}>Reservar esta ruta</a>
-    {!isStatic && hasNext && <button class="journey-ticket__next" type="button" data-next-route>Ver siguiente ruta →</button>}
+    <a class="button button--small journey-ticket__action" href="#reserva" data-reserve-route={route.id}>Reservar<span class="journey-ticket__long">&nbsp;esta ruta</span></a>
+    {!isStatic && hasNext && <button class="journey-ticket__next" type="button" data-next-route>Siguiente<span class="journey-ticket__long">&nbsp;ruta</span> →</button>}
   </div>
 </article>

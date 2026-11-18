@@ -1,7 +1,6 @@
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SITE } from '../config/site';
-import { prefersReducedMotion } from './motion';
 import { setOdometer } from './odometer';
+import { startDatepicker } from './datepicker';
 
 const formatPrice = (value: number) => `$${value.toLocaleString('es-CO')}`;
 const formatDate = (value: string) =>
@@ -16,7 +15,7 @@ export function startBooking() {
   const whatsapp = section?.querySelector<HTMLAnchorElement>('[data-booking-whatsapp]');
   if (!section || !form || !quantity || !date || !total || !whatsapp) return;
 
-  date.min = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD en hora local
+  startDatepicker(section, date);
 
   const chosenRoute = () => form.querySelector<HTMLInputElement>('input[name="route"]:checked')!;
   const chosenQuantity = () => Math.min(8, Math.max(1, Math.round(Number(quantity.value) || 1)));
@@ -51,13 +50,11 @@ export function startBooking() {
       if (!chip) return;
       chip.checked = true;
       refresh();
+      // Móvil: el carrusel muestra la carta elegida.
+      const card = chip.closest('label')!;
+      card.parentElement!.scrollLeft = card.offsetLeft - 16;
     }),
   );
 
   refresh();
-
-  if (prefersReducedMotion()) return;
-
-  // La foto hace el "cambio de cuadro" una sola vez al cruzar el borde (sin parallax).
-  ScrollTrigger.create({ trigger: section, start: 'top 90%', once: true, onEnter: () => section.setAttribute('data-entered', '') });
 }

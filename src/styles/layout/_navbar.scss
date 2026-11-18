@@ -37,13 +37,13 @@
     box-shadow: inset 0 -1px var(--grid-light);
   }
 
-  // Logo como máscara: toma el color del texto (teja, o la tinta del terreno en el recorrido).
+  // Logo como máscara: toma el color del texto (cal).
   &__brand {
     grid-column: 1;
     justify-self: start;
     width: 44px;
     aspect-ratio: 1;
-    background: currentcolor; // cal en el hero; la tinta del terreno en el recorrido
+    background: currentcolor; // cal fijo
     mask: var(--logo) center / contain no-repeat;
 
     @include until-tablet {

@@ -1,4 +1,8 @@
 :root {
+  // Barra de scroll de la página con los colores de la marca: el pulgar toma el color del terreno de la ruta.
+  scrollbar-color: var(--terrain) var(--tierra);
+  scrollbar-width: thin;
+
   // Base oscura de tierra; cal para lo que debe leerse con calma.
   --tierra: #1f1a15;
   --barro: #2e2620;
@@ -11,10 +15,10 @@
   --teja: #b4462b;
   --teja-oscura: #a03d24;
   --polvo: #e6dac6;
-  --pozo: #1d6e6a;
+  --arcilla: #cc9274; // terreno BARRO (barro seco: claro para leerse sobre el video)
+  --monte: #a3b97c; // terreno MONTAÑA
   --ocre: #d49a5a;
   --arenisca: #b3aa9c;
-  --roble: #2e432c;
   --grid-dark: rgb(31 26 21 / 0.14); // sobre cal y ocre
   --grid-light: rgb(242 237 227 / 0.1); // sobre tierra y video
   --navbar-height: 56px;
@@ -22,8 +26,8 @@
   --frame-side: 20px;
   --nav-cut: 1.75vw; // borde de la navbar a 1° (100vw · tan 1°)
   --cut: 5.24vw; // alto del corte diagonal a 3° (100vw · tan 3°)
-  --terrain: var(--pozo);
-  --terrain-ink: var(--cal);
+  --terrain: var(--arcilla);
+  --terrain-ink: var(--tierra);
 }
 
 @media (min-width: 768px) {
@@ -35,8 +39,8 @@
 // Color de terreno: el recorrido lo cambia en <html data-terrain>; cada pieza de una ruta fija el suyo con data-route.
 [data-terrain='r1'],
 [data-route='r1'] {
-  --terrain: var(--pozo);
-  --terrain-ink: var(--cal);
+  --terrain: var(--arcilla);
+  --terrain-ink: var(--tierra);
 }
 
 [data-terrain='r2'],
@@ -53,6 +57,21 @@
 
 [data-terrain='r4'],
 [data-route='r4'] {
-  --terrain: var(--roble);
-  --terrain-ink: var(--cal);
+  --terrain: var(--monte);
+  --terrain-ink: var(--tierra);
+}
+
+// Safari y Chrome viejos (los nuevos usan scrollbar-color).
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--tierra);
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid var(--tierra);
+  background: var(--terrain);
 }

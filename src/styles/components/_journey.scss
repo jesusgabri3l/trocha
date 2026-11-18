@@ -31,11 +31,18 @@
         linear-gradient(to top, rgb(31 26 21 / 0.9), transparent 45%),
         rgb(20 16 12 / 0.35); // filtro negro: unifica el tono del video con la página
       pointer-events: none;
+
+      // Móvil: el nombre de la ruta cae sobre el cielo; el oscurecido de arriba baja más para que se lea.
+      @include until-tablet {
+        background:
+          linear-gradient(to bottom, rgb(31 26 21 / 0.9), transparent calc(var(--navbar-height) * 6.5)),
+          linear-gradient(to top, rgb(31 26 21 / 0.9), transparent 45%),
+          rgb(20 16 12 / 0.35);
+      }
     }
   }
 
   &__canvas {
-    transform-origin: 50% 62%; // zoom de T1 hacia el piloto
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -75,7 +82,7 @@
   &__coords {
     @include data-label(15px);
     max-width: none;
-    color: var(--ocre); // 3 tonos a la derecha: nombre cal, dato ocre, mojón cal sobre tierra
+    color: var(--polvo); // 3 tonos a la derecha: nombre en color del terreno, dato polvo, mojón cal sobre tierra
     text-shadow: 0 1px 12px rgb(20 16 12 / 0.8); // la misma de los datos del hero
   }
 
@@ -148,6 +155,11 @@
   // En el recorrido el mojón ya dice "RUTA 0X": la placa solo queda en los bloques estáticos.
   &:not(&--static) &__label {
     display: none;
+  }
+
+  // El nombre toma el color de su terreno (solo en el recorrido: en el estático el bloque ya tiene ese fondo).
+  &:not(&--static) &__name {
+    color: var(--terrain);
   }
 
   // Placa del terreno: mismo patrón que "SALIDA · 500 M" del hero.
@@ -234,6 +246,13 @@
     gap: 4px;
     font-weight: 700;
     line-height: 1.3;
+
+    // Móvil: inicio y llegada en la misma fila (boleto más bajo).
+    @include until-tablet {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+    }
   }
 
   &__label {
@@ -291,12 +310,8 @@
     gap: 8px;
     align-content: center;
 
-    // Sin mapa: distancia y duración en una fila.
     @include until-tablet {
-      grid-column: 1 / -1;
-      grid-auto-flow: column;
-      justify-content: start;
-      gap: 24px;
+      display: none;
     }
 
     dt {
@@ -346,6 +361,18 @@
     flex-wrap: wrap;
     gap: 12px 20px;
     align-items: center;
+
+    @include until-tablet {
+      flex-wrap: nowrap;
+      justify-content: space-between;
+    }
+  }
+
+  // Pantallas muy angostas: "Reservar" y "Siguiente →" para que quepan en una fila.
+  &__long {
+    @media (max-width: 379px) {
+      display: none;
+    }
   }
 
   // Secundaria, como "Saltar el recorrido" del hero.

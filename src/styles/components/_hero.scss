@@ -6,6 +6,7 @@
   position: relative;
   z-index: 2; // por encima del recorrido
   height: calc((100 + var(--hero-scroll)) * 1svh + var(--cut));
+  pointer-events: none; // la caja de la sección sigue encima del recorrido un viewport más: que no robe los clics de R1
 
   @include reduced-motion {
     height: auto;
@@ -13,12 +14,29 @@
 
   &__stage {
     --lamina: 0;
+    pointer-events: auto;
     position: sticky;
     top: 0;
-    height: calc(100svh + var(--cut)); // la cuña diagonal queda bajo el pliegue mientras no se mueve
+    height: calc(100lvh + var(--cut)); // lvh: en iOS, al esconderse la barra del navegador no se asoma lo de abajo
     color: var(--cal);
-    filter: drop-shadow(0 24px 40px rgb(31 26 21 / 0.45)); // en el contenedor: clip-path corta box-shadow
-    transform: translateY(calc(var(--lamina) * -1 * (100svh + var(--cut)))); // 1:1 con el scroll, sin easing
+    transform: translateY(calc(var(--lamina) * -1 * (100lvh + var(--cut)))); // 1:1 con el scroll, sin easing
+
+    // Sombra de la lámina en una capa propia y quieta: un drop-shadow en el escenario se recalculaba en cada cuadro del
+    // canvas (a 1920 px trababa el hero en escritorio).
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgb(31 26 21 / 0.45);
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut)), 0 100%);
+      filter: blur(40px);
+      transform: translateY(24px);
+      pointer-events: none;
+
+      @include reduced-motion {
+        display: none;
+      }
+    }
 
     &[data-done] {
       visibility: hidden;
@@ -27,7 +45,6 @@
     @include reduced-motion {
       position: relative;
       height: 100svh;
-      filter: none;
       transform: none;
     }
   }
@@ -145,7 +162,9 @@
     max-width: none;
 
     @include until-tablet {
-      grid-template-columns: 1fr auto;
+      bottom: calc(var(--cut) + 24px + 100lvh - 100svh); // por encima de la barra de iOS cuando está visible
+      grid-template-columns: 1fr;
+      justify-items: center;
       padding: 0 16px;
     }
   }
@@ -172,6 +191,10 @@
     background: var(--ocre);
     color: var(--tierra);
     text-shadow: none;
+
+    @include until-tablet {
+      display: none;
+    }
   }
 
   &__place {

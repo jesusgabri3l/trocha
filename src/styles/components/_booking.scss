@@ -1,15 +1,10 @@
 @use '../abstracts' as *;
 
-// Escoge tu ruta (cierre): fondo tierra, foto en las columnas 4 a 6 con borde superior diagonal. Nada se superpone a la foto.
+// Escoge tu ruta (cierre): fondo tierra con retícula, 3 cartas de ruta (carrusel en móvil) y la barra de reserva debajo.
 .booking {
   position: relative;
-  min-height: 110svh;
   color: var(--cal);
   @include diagonal-top(true);
-
-  @include until-tablet {
-    min-height: 0;
-  }
 
   // Tierra con la retícula de 6 columnas (4 en móvil) al 10 %.
   &::before {
@@ -22,77 +17,28 @@
     }
   }
 
-  // Columnas 4 a 6, a sangre por la derecha y de alto completo; lleva el corte diagonal.
-  &__photo {
-    position: absolute;
-    inset: 0 0 0 auto;
-    z-index: 2;
-    width: 50%;
-    overflow: hidden;
-    background: var(--tierra);
-    clip-path: polygon(0 var(--cut), 100% 0, 100% 100%, 0 100%);
-
-    // Grano de película al 6 % para unirla con el resto de la página.
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-      mix-blend-mode: overlay;
-      opacity: 0.06;
-      pointer-events: none;
-    }
-
-    @include until-tablet {
-      position: relative;
-      inset: auto;
-      width: 100%;
-      aspect-ratio: 4 / 5;
-    }
-  }
-
-  &__photo-image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    max-width: none;
-    height: 100%;
-    object-fit: cover;
-    object-position: 68% 40%;
-  }
-
-  // "Cambio de cuadro" al cruzar el borde.
-  &[data-entered] &__photo-image {
-    animation: booking-frame-change 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-
-    @include reduced-motion {
-      animation: none;
-    }
-  }
-
   &__body {
     position: relative;
     z-index: 3;
-    width: min(100%, 560px);
-    padding: calc(var(--cut) + 64px) 0 96px 6vw;
+    width: min(100%, 1280px);
+    margin: 0 auto;
+    padding: calc(var(--cut) + 120px) 6vw 160px;
 
     @include until-tablet {
-      display: flow-root;
-      width: auto;
-      padding: 24px 16px 32px;
-      background: var(--tierra);
+      padding: calc(var(--cut) + 72px) 16px 88px;
     }
   }
 
-  // H2 en cal directo sobre tierra, en dos líneas, sin franjas ni inclinación.
+  // H2 en cal directo sobre tierra, en una línea en escritorio.
   &__title {
-    display: grid;
-    justify-items: start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.25em;
     margin-bottom: 32px;
-    font-size: clamp(72px, 11vw, 180px);
+    font-size: clamp(64px, 8vw, 128px);
 
     @include until-tablet {
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
   }
 
@@ -100,52 +46,77 @@
     color: var(--cal);
   }
 
-  &__card-wrap {
-    max-width: 440px;
-  }
-
-  // Tarjeta en barro: se separa del fondo sin borde. El formulario no se inclina.
-  &__card {
+  &__form {
     display: grid;
-    gap: 24px;
-    padding: 24px;
-    background: var(--barro);
-
-    @include until-tablet {
-      padding: 16px;
-    }
+    gap: 16px;
   }
 
+  // Escritorio: 3 cartas en fila. Móvil: carrusel con snap y la siguiente carta asomada.
   &__routes {
     display: grid;
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
     min-width: 0;
+    margin: 0;
     padding: 0;
     border: 0;
+
+    @include until-tablet {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: 78%;
+      gap: 12px;
+      margin: 0 -16px;
+      padding: 0 16px 4px;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-padding: 0 16px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
   }
 
-  &__chip {
+  &__route {
     position: relative;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    padding: 12px 16px;
-    border: 2px solid transparent;
-    background: var(--tierra);
+    display: grid;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--barro);
     color: var(--cal);
-    transition:
-      background-color 160ms ease-out,
-      border-color 160ms ease-out;
+    scroll-snap-align: start;
+    cursor: pointer;
 
-    &:hover {
-      border-color: var(--cal-sucia);
+    @include from-tablet {
+      aspect-ratio: auto;
+      height: min(62svh, 34vw);
     }
 
-    // Chip activo: se "prende" con borde teja viva y un temblor corto.
+    // Lectura del texto sobre la foto + borde de la carta elegida.
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgb(20 16 12 / 0.9), transparent 55%);
+      box-shadow: inset 0 0 0 0 var(--teja-viva);
+      transition: box-shadow 160ms ease-out;
+      pointer-events: none;
+    }
+
+    &:hover::after {
+      box-shadow: inset 0 0 0 2px var(--cal-sucia);
+    }
+
+    // Carta elegida: borde teja viva y un temblor corto.
     &:has(:checked) {
-      border-color: var(--teja-viva);
-      background: var(--barro);
       @include motion-tremor(120ms, 2px);
+
+      &::after {
+        box-shadow: inset 0 0 0 4px var(--teja-viva);
+      }
     }
 
     &:has(:focus-visible) {
@@ -154,42 +125,82 @@
     }
   }
 
-  &__chip-input {
+  &__route-input {
     position: absolute;
     inset: 0;
+    z-index: 2;
     margin: 0;
     opacity: 0;
     cursor: pointer;
   }
 
-  &__chip-swatch {
-    flex: none;
-    width: 24px;
-    height: 24px;
-    border: 1px solid var(--cal);
-    background: var(--terrain);
+  &__route-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+    transition: scale 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    @include reduced-motion {
+      transition: none;
+    }
   }
 
-  &__chip-text {
+  &__route:hover &__route-image {
+    scale: 1.04;
+  }
+
+  &__route-body {
+    position: relative;
+    z-index: 1;
     display: grid;
+    align-self: end;
+    gap: 4px;
+    padding: 20px;
+
+    @include until-tablet {
+      padding: 16px;
+    }
   }
 
-  &__chip-name {
-    font-weight: 700;
-    line-height: 1.2;
-  }
-
-  &__chip-meta {
+  &__route-number {
     @include data-label(12px);
-    margin-top: 4px;
-    color: var(--cal-sucia);
-    text-transform: none;
+    color: var(--ocre);
   }
 
-  &__fields {
+  &__route-name {
+    @include display-font(0.9);
+    font-size: clamp(44px, 4vw, 64px);
+  }
+
+  &__route-meta {
+    color: var(--polvo);
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  &__route-price {
+    @include data-label(16px);
+    margin-top: 4px;
+    color: var(--cal);
+  }
+
+  // Barra de reserva: fecha, cantidad, total y WhatsApp en una fila (escritorio).
+  &__bar {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    grid-template-columns: minmax(160px, 1fr) minmax(160px, 1fr) minmax(200px, 1.2fr) auto;
+    gap: 16px 24px;
+    align-items: end;
+    padding: 20px 24px;
+    background: var(--barro);
+
+    @include until-tablet {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      padding: 16px;
+    }
   }
 
   &__field {
@@ -225,6 +236,120 @@
     }
   }
 
+  // Calendario propio: botón con la fecha y un panel con el mes (el selector nativo no se puede estilizar).
+  &__date {
+    position: relative;
+  }
+
+  &__date-button {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover,
+    &[aria-expanded='true'] {
+      border-color: var(--cal-sucia);
+    }
+
+    svg {
+      flex: none;
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: var(--ocre);
+      stroke-width: 1.8;
+    }
+  }
+
+  &__calendar {
+    position: absolute;
+    bottom: calc(100% + 8px); // abre hacia arriba: la barra queda cerca del final de la página
+    left: 0;
+    z-index: 10;
+    width: 296px;
+    padding: 16px;
+    background: var(--tierra);
+    box-shadow: 0 0 0 2px var(--barro), 0 24px 48px rgb(0 0 0 / 0.5);
+    @include motion-slam-short;
+
+    &[data-below] {
+      top: calc(100% + 8px);
+      bottom: auto;
+    }
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  &__calendar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  &__calendar-month {
+    @include data-label(13px);
+    color: var(--cal);
+  }
+
+  &__calendar-nav,
+  &__calendar-day {
+    min-width: 0;
+    height: 36px;
+    border: 2px solid transparent;
+    background: none;
+    color: var(--cal);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      border-color: var(--cal-sucia);
+    }
+
+    &:disabled {
+      color: var(--tierra-suave);
+      cursor: default;
+    }
+  }
+
+  &__calendar-nav {
+    width: 36px;
+    font-size: 18px;
+  }
+
+  &__calendar-week,
+  &__calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    text-align: center;
+  }
+
+  &__calendar-week {
+    @include data-label(11px);
+    margin-bottom: 4px;
+    color: var(--cal-sucia);
+  }
+
+  &__calendar-day {
+    &[data-today] {
+      color: var(--ocre);
+    }
+
+    &[aria-pressed='true'] {
+      background: var(--teja-viva);
+      color: var(--tierra);
+      font-weight: 700;
+    }
+  }
+
   &__stepper {
     display: flex;
   }
@@ -245,41 +370,38 @@
   }
 
   &__total {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 16px;
-    align-items: baseline;
+    display: grid;
+    gap: 4px;
+    margin: 0;
+
+    @include until-tablet {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+      align-items: baseline;
+    }
   }
 
   &__total-value {
     --odometer-height: 1.25em;
     font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: clamp(32px, 3vw, 44px);
+    font-size: clamp(28px, 2.4vw, 36px);
     font-weight: 500;
   }
 
   &__total-note {
     color: var(--cal-sucia);
-    font-size: 14px;
+    font-size: 13px;
   }
 
   &__submit {
-    width: 100%;
-
     @include until-tablet {
+      grid-column: 1 / -1;
       position: sticky;
       bottom: 16px;
       z-index: 5;
+      width: 100%;
     }
-  }
-}
-
-@keyframes booking-frame-change {
-  from {
-    scale: 1.12;
-  }
-
-  to {
-    scale: 1;
   }
 }

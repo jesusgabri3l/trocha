@@ -7,6 +7,9 @@ const MAX_DOWNLOADS = 6;
 // Se guarda el webp comprimido (barato); solo se decodifican los cuadros cercanos al actual (createImageBitmap, fuera
 // del hilo principal). Decodificar todo pesaría cientos de MB y Safari en iOS recarga la pestaña.
 const DECODED_RADIUS = 10;
+// Pocas decodificaciones a la vez, siempre la más cercana al cuadro actual: con scroll rápido no se gasta CPU en
+// cuadros que ya quedaron atrás (a 1920 px cada una pesa).
+const MAX_DECODES = 3;
 
 export const currentDevice = (): Device => (window.matchMedia(MOBILE_QUERY).matches ? 'mobile' : 'desktop');
 
@@ -50,6 +53,7 @@ export class FrameSequence {
   private readonly chapters = new Map<string, Promise<void>>();
   private readonly context: CanvasRenderingContext2D;
   private current = 0;
+  private direction = 1;
   private drawn = -1;
 
   constructor(
@@ -102,6 +106,7 @@ export class FrameSequence {
   }
 
   show(index: number) {
+    if (index !== this.current) this.direction = index > this.current ? 1 : -1;
     this.current = index;
     this.decodeAround();
     this.draw();
@@ -138,6 +143,17 @@ export class FrameSequence {
       // blob dañado: se ignora
     } finally {
       this.decoding.delete(globalIndex);
+      this.pumpDecodes();
+    }
+  }
+
+  // Siguiente cuadro a decodificar: el más cercano, primero hacia donde va el scroll.
+  private pumpDecodes() {
+    for (let distance = 0; distance <= DECODED_RADIUS && this.decoding.size < MAX_DECODES; distance++) {
+      for (const index of [this.current + distance * this.direction, this.current - distance * this.direction]) {
+        if (this.decoding.size >= MAX_DECODES) return;
+        if (this.blobs[index] && !this.bitmaps.has(index) && !this.decoding.has(index)) void this.decode(index);
+      }
     }
   }
 
@@ -147,9 +163,7 @@ export class FrameSequence {
       bitmap.close();
       this.bitmaps.delete(index);
     });
-    for (let distance = 0; distance <= DECODED_RADIUS; distance++) {
-      for (const index of [this.current + distance, this.current - distance]) void this.decode(index);
-    }
+    this.pumpDecodes();
     // Pide el capítulo que se está viendo por si el usuario saltó (ancla, recarga a mitad de página).
     void this.loadChapter(this.segmentOf(this.current), true);
   }

@@ -1,14 +1,55 @@
 ---
-import { CREDIT_LINKS } from '../../config/site';
+import { CREDIT_LINKS, SITE } from '../../config/site';
+import { ROUTES, formatPrice } from '../../data/routes';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const whatsappUrl = `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent('Hola TROCHA, quiero información sobre las rutas.')}`;
+const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
-  <p class="footer__text">Demo de concepto: negocio ficticio en un lugar real. Precios y distancias inventados.</p>
-  <p class="footer__text footer__credit">
-    Diseño y desarrollo: Jesús Gabriel
-    {CREDIT_LINKS.map(({ label, href }) => (
-      <a class="footer__link" href={href} target="_blank" rel="noopener" aria-label={`Jesús Gabriel en ${label} (abre en una pestaña nueva)`}>{label}</a>
-    ))}
-  </p>
-  <p class="footer__mark" aria-hidden="true"></p>
+  <div class="footer__main">
+    <div class="footer__brand">
+      <span class="footer__logo" style={`--logo: url(${base}/logo.png)`} aria-hidden="true"></span>
+      <p class="footer__tagline">Renta de cuatrimotos con guía en Villa de Leyva, Boyacá.</p>
+      <a class="footer__whatsapp" href={whatsappUrl} target="_blank" rel="noopener">Escríbenos por WhatsApp<span class="sr-only"> (abre en una pestaña nueva)</span> →</a>
+    </div>
+
+    <nav class="footer__column" aria-label="Rutas">
+      <p class="footer__heading">Rutas</p>
+      <ul class="footer__list">
+        {ROUTES.map((route) => (
+          <li><a class="footer__link" href="#reserva" data-reserve-route={route.id}>{route.number} · {route.name}</a> <span class="footer__meta">desde {formatPrice(route.price)}</span></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="footer__column">
+      <p class="footer__heading">Punto de salida</p>
+      <ul class="footer__list">
+        <li>Plaza Mayor, Villa de Leyva</li>
+        <li class="footer__meta">{SITE.coordinates} · {SITE.altitude}</li>
+      </ul>
+    </div>
+
+    <div class="footer__column">
+      <p class="footer__heading">Horario</p>
+      <ul class="footer__list">
+        <li>Todos los días</li>
+        <li>7:00 a. m. – 4:00 p. m.</li>
+        <li class="footer__meta">Última salida a las 2:00 p. m.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <p>© {year} TROCHA · Demo de concepto: negocio ficticio en un lugar real. Precios, horarios y teléfono inventados.</p>
+    <p class="footer__credit">
+      Diseño y desarrollo: Jesús Gabriel
+      {CREDIT_LINKS.map(({ label, href }) => (
+        <a class="footer__link" href={href} target="_blank" rel="noopener" aria-label={`Jesús Gabriel en ${label} (abre en una pestaña nueva)`}>{label}</a>
+      ))}
+    </p>
+  </div>
+
 </footer>

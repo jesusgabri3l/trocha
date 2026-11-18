@@ -1,49 +1,123 @@
 @use '../abstracts' as *;
 
+// Footer de negocio: marca + WhatsApp, rutas, punto de salida y horario; abajo el aviso de demo y el crédito.
+// Barro (no tierra) y borde superior diagonal: se separa de Reserva como las demás secciones.
 .footer {
   position: relative;
-  display: grid;
-  gap: 16px;
-  align-content: center;
-  min-height: 240px;
-  padding: 48px 8vw;
-  overflow: hidden;
-  background: var(--tierra);
+  padding: calc(var(--cut) + 56px) 6vw 32px;
   color: var(--cal-sucia);
   font-size: 14px;
+  @include diagonal-top(false);
 
-  &__text {
+  &::before {
+    background: var(--barro);
+  }
+
+  @include until-tablet {
+    padding: calc(var(--cut) + 40px) 16px 24px;
+  }
+
+  &__main,
+  &__bottom {
     position: relative;
-    z-index: 1;
+    z-index: 3; // por encima del fondo diagonal (::before)
+    width: min(100%, 1280px);
+    margin: 0 auto;
+  }
+
+  &__main {
+    display: grid;
+    grid-template-columns: 1.4fr repeat(3, 1fr);
+    gap: 40px 32px;
+    padding-bottom: 48px;
+
+    @include until-tablet {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px 16px;
+      padding-bottom: 32px;
+    }
+  }
+
+  &__brand {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+    justify-items: start;
+
+    @include until-tablet {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__logo {
+    width: 48px;
+    aspect-ratio: 1;
+    background: var(--cal);
+    mask: var(--logo) center / contain no-repeat;
+  }
+
+  &__tagline {
+    max-width: 28ch;
+    color: var(--cal);
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  &__whatsapp {
+    @include data-label(13px);
+    color: var(--teja-viva);
+    text-underline-offset: 6px;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--cal);
+    }
+  }
+
+  &__heading {
+    @include data-label(12px);
+    margin-bottom: 12px;
+    color: var(--ocre);
+  }
+
+  &__list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--cal);
+    line-height: 1.4;
+  }
+
+  &__meta {
+    color: var(--cal-sucia);
+    font-size: 13px;
+  }
+
+  &__link {
+    color: inherit;
+    text-underline-offset: 4px;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--teja-viva);
+    }
+  }
+
+  &__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 32px;
+    justify-content: space-between;
+    padding-top: 24px;
+    border-top: 1px solid var(--grid-light);
+    font-size: 13px;
   }
 
   &__credit {
     display: flex;
     flex-wrap: wrap;
     gap: 4px 16px;
-  }
-
-  &__link {
-    text-underline-offset: 4px;
-  }
-
-  // TROCHA decorativa: cal al 6 %, cortada por el borde inferior.
-  &__mark {
-    @include display-font(0.8);
-    position: absolute;
-    right: 0;
-    bottom: -0.3em;
-    left: 0;
-    max-width: none;
-    color: rgb(242 237 227 / 0.06);
-    font-size: clamp(150px, 40vw, 820px);
-    text-align: center;
-    pointer-events: none;
-    user-select: none;
-
-    // En CSS y no en el HTML: es decoración al 6 % y axe la marcaba como texto sin contraste.
-    &::before {
-      content: 'TROCHA';
-    }
   }
 }

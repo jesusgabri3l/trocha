@@ -253,6 +253,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 4px 16px;
+      justify-content: space-between; // inicio a la izquierda, llegada a la derecha: alineado con los botones
     }
   }
 

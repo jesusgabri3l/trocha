@@ -10,6 +10,7 @@
     position: sticky;
     top: 0;
     height: 100svh;
+    height: 100dvh; // iOS: sigue el alto visible cuando la barra del navegador se esconde (el boleto queda pegado abajo)
     background: var(--tierra); // video a sangre, sin marco
   }
 

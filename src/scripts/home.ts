@@ -7,10 +7,12 @@ import { startMachine } from './machine';
 import { startBooking } from './booking';
 import { startReveal } from './reveal';
 import { startOdometers } from './odometer';
+import { startLoader } from './loader';
 
 gsap.registerPlugin(ScrollTrigger);
 
 startSmoothScroll();
+startLoader(); // antes del hero: cuenta desde el primer cuadro
 startReveal();
 startOdometers();
 startMachine();

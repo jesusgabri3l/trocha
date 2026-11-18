@@ -1,0 +1,15 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<!-- Tanqueando: el logo se llena con la descarga del hero (src/scripts/loader.ts). -->
+<div class="loader" data-loader role="progressbar" aria-label="Tanqueando la página" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style={`--logo: url(${base}/logo.png)`}>
+  <div class="loader__content" aria-hidden="true">
+    <span class="loader__tank"><span class="loader__fuel"></span></span>
+    <p class="loader__row">
+      <span class="loader__label" data-loader-label>TANQUEANDO</span>
+      <span class="loader__value" data-loader-value>0 %</span>
+    </p>
+  </div>
+</div>
+<noscript><style>.loader { display: none; }</style></noscript>

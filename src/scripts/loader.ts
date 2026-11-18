@@ -3,9 +3,11 @@ import { frameEvents, preferCoarseFrames } from './frame-sequence';
 import { prefersReducedMotion } from './motion';
 import { setScrollLocked } from './smooth-scroll';
 
-// Pantalla "tanqueando": el logo se llena con la descarga real y bloquea el scroll hasta tener todo el hero y 1 de cada
-// 4 cuadros de R1, así un scroll a lo loco apenas carga la página siempre tiene imagen.
+// Pantalla "tanqueando": el logo se llena con la descarga real y bloquea el scroll hasta tener 1 de cada 4 cuadros del
+// hero y de los primeros segundos de R1 (~2 MB escritorio). Un scroll a lo loco apenas carga ve, en el peor caso, saltos
+// de 4 cuadros (fundidos), nunca una imagen pegada; el resto sigue bajando mientras se ve el hero.
 const COARSE_STEP = 4;
+const R1_FRAMES = 48; // ~4 s de R1 a 12 fps
 const SHOW_CONTENT_AFTER = 200; // el contenido entra a los 200 ms: con caché no alcanza a parpadear
 const MIN_VISIBLE = 600;
 const TIMEOUT = 10_000; // red caída o lenta: sale igual con lo que haya
@@ -27,8 +29,8 @@ export function startLoader() {
   const value = loader.querySelector<HTMLElement>('[data-loader-value]')!;
   const r1 = FRAMES.journey.segments.find(({ id }) => id === 'r1')!;
   const needed = new Set<string>();
-  for (let i = 0; i < FRAMES.hero.count; i++) needed.add(`hero:${i}`);
-  for (let i = 0; i < r1.count; i += COARSE_STEP) needed.add(`r1:${i}`);
+  for (let i = 0; i < FRAMES.hero.count; i += COARSE_STEP) needed.add(`hero:${i}`);
+  for (let i = 0; i < Math.min(R1_FRAMES, r1.count); i += COARSE_STEP) needed.add(`r1:${i}`);
   const total = needed.size;
 
   const started = performance.now();

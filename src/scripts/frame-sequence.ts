@@ -24,17 +24,19 @@ interface DownloadJob {
 const pending: DownloadJob[] = [];
 let activeDownloads = 0;
 let activeSequence: FrameSequence | undefined;
-// Mientras la pantalla de carga espera, primero todos los "1 de cada 4" (luego vuelve a 3).
-let fineWeight = 3;
+// Mientras la pantalla de carga espera: primero los "1 de cada 4" de hero y recorrido por igual (lo que ella espera),
+// después el resto. Luego vuelve a priorizar la secuencia que se está viendo.
+let loading = false;
 export const preferCoarseFrames = (on: boolean) => {
-  fineWeight = on ? 1000 : 3;
+  loading = on;
 };
 // Avisa cada cuadro descargado (la pantalla de carga cuenta los que necesita).
 export const frameEvents = new EventTarget();
 const cost = ({ sequence, index }: DownloadJob) => {
   const distance = index - sequence.position;
   const steps = distance >= 0 ? distance : -distance * 2; // lo de adelante pesa la mitad que lo de atrás
-  return (sequence === activeSequence ? 0 : 1e6) + steps * (index % LOAD_STEP === 0 ? 1 : fineWeight);
+  if (loading) return steps * (index % LOAD_STEP === 0 ? 1 : 1000);
+  return (sequence === activeSequence ? 0 : 1e6) + steps * (index % LOAD_STEP === 0 ? 1 : 3);
 };
 const pump = () => {
   while (activeDownloads < MAX_DOWNLOADS && pending.length > 0) {

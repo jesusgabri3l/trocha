@@ -1,9 +1,9 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
 
-// En GitHub Pages el sitio vive bajo /<repo>/ (BASE_PATH lo pone el workflow); en local queda en la raíz.
+// Publicado en Vercel, en la raíz del dominio. BASE_PATH solo si algún día vuelve a vivir bajo una subcarpeta.
 export default defineConfig({
-  site: 'https://jesusgabri3l.github.io',
+  site: 'https://trocha-demo.vercel.app',
   base: process.env.BASE_PATH ?? '/',
   fonts: [
     { provider: fontProviders.fontsource(), name: 'Jersey 10', cssVariable: '--font-display', weights: [400], styles: ['normal'], subsets: ['latin', 'latin-ext'] },

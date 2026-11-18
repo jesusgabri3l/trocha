@@ -5,7 +5,7 @@
 **Scroll and you're riding.**
 A concept site for a fictional quad bike rental in Villa de Leyva, Colombia: the page is a first-person ride through three dirt routes, with a booking ticket for each one and a one-tap WhatsApp reservation.
 
-[**Visit the demo →**](https://jesusgabri3l.github.io/trocha/)
+[**Visit the demo →**](https://trocha-demo.vercel.app/)
 
 <br />
 
@@ -34,7 +34,7 @@ A landing page concept for a fictional brand. TROCHA is not a real business: the
 
 ## How it's built
 
-**Astro 7** (static) · **GSAP** ScrollTrigger · Lenis · Sass · TypeScript · GitHub Pages.
+**Astro 7** (static) · **GSAP** ScrollTrigger · Lenis · Sass · TypeScript · Vercel.
 
 - **One continuous video, cut into frames.** Each route and transition is an AI clip (Kling 4.0) that starts from the real last frame of the previous one, so the landscape and the rider's outfit stay consistent. The whole ride went through Topaz in a single pass, so there are no jumps between clips. 528 frames ship as AVIF (1920 px on desktop, a 608 px vertical crop on phones; 34 MB and 14 MB in total, about a third of the WebP version) and are drawn on a `<canvas>` as you scroll.
 - **Frames load where you are.** The whole ride starts downloading in the background while you watch the hero, but the queue always picks the frame closest to your scroll position first (every fourth frame counts as closer, so a fast scroll still gets a moving picture). Only the frames around the current one are decoded (off the main thread with `createImageBitmap`, three at a time), so memory stays low on phones.
@@ -44,7 +44,7 @@ A landing page concept for a fictional brand. TROCHA is not a real business: the
 
 ## PageSpeed
 
-PageSpeed Insights on the [live demo](https://jesusgabri3l.github.io/trocha/), November 18, 2026:
+PageSpeed Insights on the [live demo](https://trocha-demo.vercel.app/), November 18, 2026:
 
 <table>
   <tr>

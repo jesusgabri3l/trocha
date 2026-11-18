@@ -13,30 +13,33 @@ const MAX_DECODES = 3;
 
 export const currentDevice = (): Device => (window.matchMedia(MOBILE_QUERY).matches ? 'mobile' : 'desktop');
 
-// Cola global de descargas: los capítulos urgentes (el que ve el usuario) pasan al frente.
-const pending: Array<() => Promise<void>> = [];
+// Cola global de descargas por prioridad: siempre baja primero el cuadro más cercano a donde está el usuario (en la
+// secuencia que está viendo), no en orden de llegada. Así el scroll no deja atrás a la descarga y no se queda pegado
+// un cuadro viejo. 1 de cada 4 cuenta como "más cerca": con scroll rápido llega antes una versión salteada.
+interface DownloadJob {
+  sequence: FrameSequence;
+  index: number; // índice global en su secuencia
+  run: () => Promise<void>;
+}
+const pending: DownloadJob[] = [];
 let activeDownloads = 0;
+let activeSequence: FrameSequence | undefined;
+const cost = ({ sequence, index }: DownloadJob) => {
+  const distance = index - sequence.position;
+  const steps = distance >= 0 ? distance : -distance * 2; // lo de adelante pesa la mitad que lo de atrás
+  return (sequence === activeSequence ? 0 : 1e6) + steps * (index % LOAD_STEP === 0 ? 1 : 3);
+};
 const pump = () => {
   while (activeDownloads < MAX_DOWNLOADS && pending.length > 0) {
+    let best = 0;
+    for (let i = 1; i < pending.length; i++) if (cost(pending[i]!) < cost(pending[best]!)) best = i;
+    const [job] = pending.splice(best, 1);
     activeDownloads++;
-    pending.shift()!().finally(() => {
+    job!.run().finally(() => {
       activeDownloads--;
       pump();
     });
   }
-};
-const enqueue = (jobs: Array<() => Promise<void>>, urgent: boolean) => {
-  if (urgent) pending.unshift(...jobs);
-  else pending.push(...jobs);
-  pump();
-};
-
-// Primer y último cuadro, luego 1 de cada 4, luego el resto.
-const loadOrder = (count: number) => {
-  const order = count > 1 ? [0, count - 1] : [0];
-  for (let i = LOAD_STEP; i < count - 1; i += LOAD_STEP) order.push(i);
-  for (let i = 1; i < count - 1; i++) if (i % LOAD_STEP !== 0) order.push(i);
-  return order;
 };
 
 export interface SequenceSegment {
@@ -85,21 +88,31 @@ export class FrameSequence {
     this.draw();
   }
 
-  loadChapter(segmentId: string, urgent = false) {
+  get position() {
+    return this.current;
+  }
+
+  loadChapter(segmentId: string) {
     const known = this.chapters.get(segmentId);
     if (known) return known;
     const segment = this.segments.find(({ id }) => id === segmentId);
     if (!segment) return Promise.resolve();
-    const jobs = loadOrder(segment.count).map((index) => async () => {
-      await this.fetchFrame(segmentId, index);
-      if (Math.abs(this.offsets.get(segmentId)! + index - this.current) <= DECODED_RADIUS) this.decodeAround();
-    });
+    const offset = this.offsets.get(segmentId)!;
+    activeSequence ??= this;
     const done = new Promise<void>((resolve) => {
-      let left = jobs.length;
-      enqueue(
-        jobs.map((job) => () => job().finally(() => --left === 0 && resolve())),
-        urgent,
-      );
+      let left = segment.count;
+      for (let local = 0; local < segment.count; local++) {
+        pending.push({
+          sequence: this,
+          index: offset + local,
+          run: async () => {
+            await this.fetchFrame(segmentId, local);
+            if (Math.abs(offset + local - this.current) <= DECODED_RADIUS) this.decodeAround();
+            if (--left === 0) resolve();
+          },
+        });
+      }
+      pump();
     });
     this.chapters.set(segmentId, done);
     return done;
@@ -108,6 +121,7 @@ export class FrameSequence {
   show(index: number) {
     if (index !== this.current) this.direction = index > this.current ? 1 : -1;
     this.current = index;
+    activeSequence = this;
     this.decodeAround();
     this.draw();
   }
@@ -165,7 +179,7 @@ export class FrameSequence {
     });
     this.pumpDecodes();
     // Pide el capítulo que se está viendo por si el usuario saltó (ancla, recarga a mitad de página).
-    void this.loadChapter(this.segmentOf(this.current), true);
+    void this.loadChapter(this.segmentOf(this.current));
   }
 
   private draw() {

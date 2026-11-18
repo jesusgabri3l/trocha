@@ -247,14 +247,6 @@
     gap: 4px;
     font-weight: 700;
     line-height: 1.3;
-
-    // Móvil: inicio y llegada en la misma fila (boleto más bajo).
-    @include until-tablet {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px 16px;
-      justify-content: space-between; // inicio a la izquierda, llegada a la derecha: alineado con los botones
-    }
   }
 
   &__label {

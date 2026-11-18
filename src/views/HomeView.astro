@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TheNavbar from '../components/layout/TheNavbar.astro';
 import TheFooter from '../components/layout/TheFooter.astro';
+import TheLoader from '../components/layout/TheLoader.astro';
 import HomeHero from '../components/home/HomeHero.astro';
 import HomeJourney from '../components/home/HomeJourney.astro';
 import HomeMachine from '../components/home/HomeMachine.astro';
@@ -11,6 +12,7 @@ import { SITE } from '../config/site';
 ---
 
 <BaseLayout title={SITE.title} description={SITE.description}>
+  <TheLoader />
   <TheNavbar />
   <main id="contenido">
     <HomeHero />

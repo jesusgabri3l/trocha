@@ -24,10 +24,17 @@ interface DownloadJob {
 const pending: DownloadJob[] = [];
 let activeDownloads = 0;
 let activeSequence: FrameSequence | undefined;
+// Mientras la pantalla de carga espera, primero todos los "1 de cada 4" (luego vuelve a 3).
+let fineWeight = 3;
+export const preferCoarseFrames = (on: boolean) => {
+  fineWeight = on ? 1000 : 3;
+};
+// Avisa cada cuadro descargado (la pantalla de carga cuenta los que necesita).
+export const frameEvents = new EventTarget();
 const cost = ({ sequence, index }: DownloadJob) => {
   const distance = index - sequence.position;
   const steps = distance >= 0 ? distance : -distance * 2; // lo de adelante pesa la mitad que lo de atrás
-  return (sequence === activeSequence ? 0 : 1e6) + steps * (index % LOAD_STEP === 0 ? 1 : 3);
+  return (sequence === activeSequence ? 0 : 1e6) + steps * (index % LOAD_STEP === 0 ? 1 : fineWeight);
 };
 const pump = () => {
   while (activeDownloads < MAX_DOWNLOADS && pending.length > 0) {
@@ -58,6 +65,9 @@ export class FrameSequence {
   private current = 0;
   private direction = 1;
   private drawn = -1;
+  // Fundido hacia el cuadro siguiente según el scroll entre dos cuadros: a 12 fps, sin esto se ve el salto de cuadro.
+  private blend = 0;
+  private drawnBlend = 0;
 
   constructor(
     private readonly canvas: HTMLCanvasElement,
@@ -118,7 +128,8 @@ export class FrameSequence {
     return done;
   }
 
-  show(index: number) {
+  show(index: number, blend = 0) {
+    this.blend = blend;
     if (index !== this.current) this.direction = index > this.current ? 1 : -1;
     this.current = index;
     activeSequence = this;
@@ -139,6 +150,7 @@ export class FrameSequence {
       const response = await fetch(frameUrl(BASE, this.device, segmentId, localIndex));
       if (!response.ok) throw new Error(response.url);
       this.blobs[globalIndex] = await response.blob();
+      frameEvents.dispatchEvent(new CustomEvent('loaded', { detail: { segmentId, localIndex } }));
     } catch {
       // Un cuadro perdido se cubre con el más cercano al dibujar.
     }
@@ -189,9 +201,19 @@ export class FrameSequence {
       if (this.bitmaps.has(this.current - distance)) index = this.current - distance;
       else if (this.bitmaps.has(this.current + distance)) index = this.current + distance;
     }
-    if (index < 0 || index === this.drawn) return;
+    if (index < 0) return;
+    const next = index === this.current && this.blend > 0.02 ? this.bitmaps.get(index + 1) : undefined;
+    const blend = next ? Math.round(this.blend * 20) / 20 : 0; // pasos de 5 %: no redibuja por cada píxel de scroll
+    if (index === this.drawn && blend === this.drawnBlend) return;
     this.drawn = index;
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.drawImage(this.bitmaps.get(index)!, 0, 0, this.canvas.width, this.canvas.height);
+    this.drawnBlend = blend;
+    const { width, height } = this.canvas;
+    this.context.globalAlpha = 1;
+    this.context.drawImage(this.bitmaps.get(index)!, 0, 0, width, height);
+    if (next && blend > 0) {
+      this.context.globalAlpha = blend;
+      this.context.drawImage(next, 0, 0, width, height);
+      this.context.globalAlpha = 1;
+    }
   }
 }

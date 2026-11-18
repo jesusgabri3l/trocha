@@ -28,7 +28,8 @@ export async function startHero() {
   const lastFrame = FRAMES.hero.count - 1;
   const update = (progress: number) => {
     const drive = clamp(progress);
-    sequence.show(Math.round(drive * lastFrame));
+    const position = drive * lastFrame;
+    sequence.show(Math.floor(position), position - Math.floor(position));
     stage.style.setProperty('--drive', String(drive));
     if (km) {
       const meters = Math.round(((1 - drive) * START_METERS) / 10) * 10;

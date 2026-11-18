@@ -53,7 +53,7 @@ export async function startJourney() {
     const local = Math.min(1, Math.max(0, (position - starts[index]!) / segment.vh));
     const frame = Math.min(segment.count - 1, Math.floor(local * segment.count));
 
-    if (progress > 0) sequence.show(sequence.globalIndex(segment.id, frame));
+    if (progress > 0) sequence.show(sequence.globalIndex(segment.id, frame), Math.min(1, local * segment.count - frame));
     const peak = segment.peak ?? Math.floor(segment.count / 2);
     if (segment.kind === 'route' && index === chapter && lastFrame >= 0 && lastFrame < peak && frame >= peak) shakeCanvas();
     lastFrame = frame;

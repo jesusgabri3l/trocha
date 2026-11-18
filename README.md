@@ -9,7 +9,7 @@ A concept site for a fictional quad bike rental in Villa de Leyva, Colombia: the
 
 <br />
 
-<img src="docs/screenshots/desktop-hero.jpg" alt="TROCHA hero on desktop: the word TROCHA in orange over a quad bike on a dirt road, with 'Reservar ahora' and 'Saltar el recorrido' buttons" width="100%" />
+<img src="docs/screenshots/desktop-hero-2026-11-18.jpg" alt="TROCHA hero on desktop: the word TROCHA in orange over a quad bike on a dirt road, with 'Reservar ahora' and 'Saltar el recorrido' buttons" width="100%" />
 
 </div>
 
@@ -19,16 +19,18 @@ A landing page concept for a fictional brand. TROCHA is not a real business: the
 
 <table>
   <tr>
-    <td align="center" width="33%"><img src="docs/screenshots/mobile-hero.jpg" alt="Hero on a phone: TROCHA above the rider and the 'Reservar ahora' button" width="100%" /><br /><sub>Hero</sub></td>
-    <td align="center" width="33%"><img src="docs/screenshots/mobile-route.jpg" alt="First route on a phone: the rider on a muddy trail, the route name BARRO and a ticket with distance, duration and price" width="100%" /><br /><sub>Route</sub></td>
-    <td align="center" width="33%"><img src="docs/screenshots/mobile-tunnel.jpg" alt="Transition on a phone: the rider entering a dark tunnel between two routes" width="100%" /><br /><sub>Transition</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/mobile-hero-2026-11-18.jpg" alt="Hero on a phone: TROCHA above the rider and the 'Reservar ahora' button" width="100%" /><br /><sub>Hero</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/mobile-route-2026-11-18.jpg" alt="First route on a phone: the rider on a muddy trail, the route name BARRO in clay color and a compact ticket with the price and a reserve button" width="100%" /><br /><sub>Route</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/mobile-booking-2026-11-18.jpg" alt="Booking on a phone: a swipeable card per route with its photo, name and price, then date, number of quads, total and the WhatsApp button" width="100%" /><br /><sub>Booking</sub></td>
   </tr>
 </table>
 
 - **Hero:** the rider takes off as you scroll, then the hero lifts like a shutter and the ride begins.
-- **The ride:** three routes (mud, desert, mountain) joined by short transitions. Each route shows its name, coordinates, a milestone counting kilometers and a ticket with distance, duration and price.
+- **The ride:** three routes (Barro, Arena, Montaña) joined by short transitions. Each route shows its name in the color of its terrain, coordinates, a milestone counting kilometers and a ticket with distance, duration and price.
 - **The machine:** the quad bike and what's included (guide, helmet, insurance).
-- **Booking:** pick a route, a date and how many quads; the total updates and the WhatsApp button carries the full message.
+- **Booking:** one card per route (a swipeable carousel on phones), a custom date picker and how many quads; the total updates and the WhatsApp button carries the full message.
+
+<img src="docs/screenshots/desktop-booking-2026-11-18.jpg" alt="Booking on desktop: three route cards (Barro, Arena, Montaña) with photo, duration and price, and a bar with date, quads, total and 'Reservar por WhatsApp'" width="100%" />
 
 ## How it's built
 
@@ -50,16 +52,16 @@ PageSpeed Insights on the [live demo](https://jesusgabri3l.github.io/trocha/), N
     <th width="50%">Desktop</th>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/pagespeed-mobile-2026-11-18.png" alt="PageSpeed mobile: Performance 98, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
-    <td><img src="docs/screenshots/pagespeed-desktop-2026-11-18.png" alt="PageSpeed desktop: Performance 100, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
+    <td><img src="docs/screenshots/pagespeed-mobile-2026-11-18-v2.png" alt="PageSpeed mobile: Performance 97, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
+    <td><img src="docs/screenshots/pagespeed-desktop-2026-11-18-v2.png" alt="PageSpeed desktop: Performance 100, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
   </tr>
 </table>
 
 | PageSpeed | Mobile | Desktop |
 |---|---|---|
-| First Contentful Paint | 1.2 s | 0.2 s |
-| Largest Contentful Paint | 1.2 s | 0.2 s |
-| Cumulative Layout Shift | 0 | 0.006 |
+| First Contentful Paint | 1.1 s | 0.2 s |
+| Largest Contentful Paint | 1.1 s | 0.2 s |
+| Cumulative Layout Shift | 0 | 0.018 |
 | Total Blocking Time | 10 ms | 0 ms |
 
 ## Development

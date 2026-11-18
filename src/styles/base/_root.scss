@@ -1,0 +1,58 @@
+:root {
+  // Base oscura de tierra; cal para lo que debe leerse con calma.
+  --tierra: #1f1a15;
+  --barro: #2e2620;
+  --cal: #f2ede3;
+  --cal-sucia: #b9ae9e; // texto secundario sobre oscuro
+  --tierra-suave: #6b6157; // texto secundario solo sobre cal
+  // Acento: teja viva sobre oscuro, teja sobre claro. Nunca se cruzan.
+  --teja-viva: #e85d2c;
+  --teja-viva-clara: #f0642f;
+  --teja: #b4462b;
+  --teja-oscura: #a03d24;
+  --polvo: #e6dac6;
+  --pozo: #1d6e6a;
+  --ocre: #d49a5a;
+  --arenisca: #b3aa9c;
+  --roble: #2e432c;
+  --grid-dark: rgb(31 26 21 / 0.14); // sobre cal y ocre
+  --grid-light: rgb(242 237 227 / 0.1); // sobre tierra y video
+  --navbar-height: 56px;
+  --hero-scroll: 200; // svh de scroll del hero: 70 % solo video, luego la lámina sube con el polvo corriendo
+  --frame-side: 20px;
+  --nav-cut: 1.75vw; // borde de la navbar a 1° (100vw · tan 1°)
+  --cut: 5.24vw; // alto del corte diagonal a 3° (100vw · tan 3°)
+  --terrain: var(--pozo);
+  --terrain-ink: var(--cal);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --navbar-height: 64px;
+  }
+}
+
+// Color de terreno: el recorrido lo cambia en <html data-terrain>; cada pieza de una ruta fija el suyo con data-route.
+[data-terrain='r1'],
+[data-route='r1'] {
+  --terrain: var(--pozo);
+  --terrain-ink: var(--cal);
+}
+
+[data-terrain='r2'],
+[data-route='r2'] {
+  --terrain: var(--ocre);
+  --terrain-ink: var(--tierra);
+}
+
+[data-terrain='r3'],
+[data-route='r3'] {
+  --terrain: var(--arenisca);
+  --terrain-ink: var(--tierra);
+}
+
+[data-terrain='r4'],
+[data-route='r4'] {
+  --terrain: var(--roble);
+  --terrain-ink: var(--cal);
+}

@@ -1,0 +1,40 @@
+---
+import { MACHINE_LABELS } from '../../data/machine';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<section class="machine" id="maquina" data-machine aria-labelledby="machine-title">
+  <div class="machine__inner">
+    <h2 class="machine__title" id="machine-title" data-reveal="launch">La máquina</h2>
+
+    <div class="machine__stage">
+      <div class="machine__bike">
+        <img class="machine__roost" src={`${base}/img/roost-3.webp`} alt="" width="1600" height="900" />
+        <img class="machine__quad" src={`${base}/img/perfil.webp`} alt="Cuatrimoto TROCHA de perfil, con la trompa levantada" width="1200" height="800" loading="lazy" decoding="async" />
+        <svg class="machine__lines" viewBox="0 0 300 200" aria-hidden="true">
+          {MACHINE_LABELS.map(({ anchor, target }, index) => (
+            <path class="machine__line" style={`--i: ${index}`} d={`M${anchor[0]} ${anchor[1]} L${target[0]} ${target[1]}`} pathLength="1" />
+          ))}
+        </svg>
+        {MACHINE_LABELS.map(({ target }, index) => (
+          <span class="machine__pin" aria-hidden="true" style={`--x: ${(target[0] / 3).toFixed(1)}%; --y: ${(target[1] / 2).toFixed(1)}%`}>{index + 1}</span>
+        ))}
+      </div>
+
+      <ul class="machine__labels">
+        {MACHINE_LABELS.map(({ data, text, anchor, side }, index) => (
+          <li class={`machine__label machine__label--${side}`} style={`--x: ${(anchor[0] / 3).toFixed(1)}%; --y: ${(anchor[1] / 2).toFixed(1)}%; --delay: ${1100 + index * 90}ms`}>
+            <span class="machine__label-number" aria-hidden="true">{index + 1}</span>
+            <span class="machine__label-body">
+              <span class="machine__label-data">{data}</span>
+              <span class="machine__label-text">{text}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <p class="machine__fleet" data-reveal="up">6 máquinas iguales · revisadas antes de cada salida</p>
+  </div>
+</section>

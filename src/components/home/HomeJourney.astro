@@ -1,0 +1,47 @@
+---
+import HomeJourneyBanner from './HomeJourneyBanner.astro';
+import HomeJourneyTicket from './HomeJourneyTicket.astro';
+import BaseMilestone from '../base/BaseMilestone.astro';
+import { ROUTES } from '../../data/routes';
+import { SITE } from '../../config/site';
+import { FRAMES, JOURNEY_LENGTH_VH, frameUrl, lastFrameIndex } from '../../config/frames';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<section
+  class="journey"
+  id="rutas"
+  data-journey
+  style={`--journey-length: ${JOURNEY_LENGTH_VH}`}
+  aria-label="Recorrido por las rutas"
+>
+  <div class="journey__stage" data-journey-stage>
+    <div class="journey__viewport">
+      <canvas class="journey__canvas" data-journey-canvas aria-hidden="true" width={FRAMES.journey.desktop.w} height={FRAMES.journey.desktop.h}></canvas>
+      <div class="journey__corner">
+        {ROUTES.map((route) => <HomeJourneyBanner route={route} />)}
+        <p class="journey__coords" aria-hidden="true">{SITE.coordinates}</p>
+        <BaseMilestone class="journey__milestone" aria-live="off">
+          <span data-journey-milestone>RUTA 01 · KM 00,0</span>
+        </BaseMilestone>
+      </div>
+      {ROUTES.map((route, index) => <HomeJourneyTicket route={route} hasNext={index < ROUTES.length - 1} />)}
+      <p class="journey__hint" aria-hidden="true">Desliza para seguir explorando <span class="journey__arrow">↓</span></p>
+    </div>
+  </div>
+
+  <!-- prefers-reduced-motion: 4 bloques estáticos con el último cuadro de cada ruta -->
+  <div class="journey__static">
+    {ROUTES.map((route) => (
+      <article class="journey__block" data-route={route.id}>
+        <picture>
+          <source media="(max-width: 767px)" srcset={frameUrl(base, 'mobile', route.id, lastFrameIndex(route.id))} />
+          <img class="journey__block-image" src={frameUrl(base, 'desktop', route.id, lastFrameIndex(route.id))} alt="" loading="lazy" width={FRAMES.journey.desktop.w} height={FRAMES.journey.desktop.h} />
+        </picture>
+        <HomeJourneyBanner route={route} isStatic />
+        <HomeJourneyTicket route={route} isStatic />
+      </article>
+    ))}
+  </div>
+</section>

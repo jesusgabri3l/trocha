@@ -1,0 +1,13 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+// Por defecto va sobre fondo oscuro (teja viva, texto tierra). `onLight` es para fondos cal (teja, texto cal).
+interface Props extends HTMLAttributes<'a'> {
+  size?: 'small' | 'large';
+  onLight?: boolean;
+}
+
+const { size, onLight = false, class: className, ...attributes } = Astro.props;
+---
+
+<a class:list={['button', size && `button--${size}`, onLight && 'button--light', className]} {...attributes}><slot /></a>

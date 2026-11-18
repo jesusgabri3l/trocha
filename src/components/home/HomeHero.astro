@@ -1,0 +1,37 @@
+---
+import BaseButton from '../base/BaseButton.astro';
+import { SITE, MOBILE_QUERY } from '../../config/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<section class="hero" data-hero aria-labelledby="hero-title">
+  <div class="hero__stage" data-hero-stage>
+    <div class="hero__sheet">
+      <div class="hero__window">
+        <!-- Primer cuadro en HTML: se ve antes de que cargue el JS (LCP / Speed Index); el canvas lo tapa al pintar. -->
+        <picture>
+          <source media={MOBILE_QUERY} srcset={`${base}/frames/mobile/hero/0000.webp`} />
+          <img class="hero__video" src={`${base}/frames/desktop/hero/0000.webp`} alt="" width="1920" height="1080" fetchpriority="high" />
+        </picture>
+        <canvas class="hero__video hero__video--canvas" data-hero-canvas aria-hidden="true"></canvas>
+      </div>
+
+      <div class="hero__header">
+        <h1 class="hero__title" id="hero-title">TROCHA<span class="sr-only"> renta de cuatrimotos en Villa de Leyva</span></h1>
+        <p class="hero__kicker" aria-hidden="true">Renta de cuatrimotos en <span class="hero__place">Villa de Leyva</span></p>
+        <p class="hero__lead">Tres trochas en un día. Con guía, casco y seguro.</p>
+        <div class="hero__actions">
+          <BaseButton href="#reserva">Reservar ahora</BaseButton>
+          <a class="hero__skip" href="#maquina">Saltar el recorrido</a>
+        </div>
+      </div>
+
+      <div class="hero__data">
+        <span class="hero__coords">{SITE.coordinates}</span>
+        <span class="hero__hint">Desliza para arrancar <span class="hero__arrow" aria-hidden="true">↓</span></span>
+        <span class="hero__km" data-hero-km>SALIDA · 500 M</span>
+      </div>
+    </div>
+  </div>
+</section>

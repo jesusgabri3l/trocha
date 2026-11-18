@@ -1,0 +1,285 @@
+@use '../abstracts' as *;
+
+// Escoge tu ruta (cierre): fondo tierra, foto en las columnas 4 a 6 con borde superior diagonal. Nada se superpone a la foto.
+.booking {
+  position: relative;
+  min-height: 110svh;
+  color: var(--cal);
+  @include diagonal-top(true);
+
+  @include until-tablet {
+    min-height: 0;
+  }
+
+  // Tierra con la retícula de 6 columnas (4 en móvil) al 10 %.
+  &::before {
+    background-color: var(--tierra);
+    background-image: linear-gradient(to right, var(--grid-light) 1px, transparent 1px);
+    background-size: calc(100% / 6) 100%;
+
+    @include until-tablet {
+      background-size: calc(100% / 4) 100%;
+    }
+  }
+
+  // Columnas 4 a 6, a sangre por la derecha y de alto completo; lleva el corte diagonal.
+  &__photo {
+    position: absolute;
+    inset: 0 0 0 auto;
+    z-index: 2;
+    width: 50%;
+    overflow: hidden;
+    background: var(--tierra);
+    clip-path: polygon(0 var(--cut), 100% 0, 100% 100%, 0 100%);
+
+    // Grano de película al 6 % para unirla con el resto de la página.
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    @include until-tablet {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+    }
+  }
+
+  &__photo-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+    object-position: 68% 40%;
+  }
+
+  // "Cambio de cuadro" al cruzar el borde.
+  &[data-entered] &__photo-image {
+    animation: booking-frame-change 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+    @include reduced-motion {
+      animation: none;
+    }
+  }
+
+  &__body {
+    position: relative;
+    z-index: 3;
+    width: min(100%, 560px);
+    padding: calc(var(--cut) + 64px) 0 96px 6vw;
+
+    @include until-tablet {
+      display: flow-root;
+      width: auto;
+      padding: 24px 16px 32px;
+      background: var(--tierra);
+    }
+  }
+
+  // H2 en cal directo sobre tierra, en dos líneas, sin franjas ni inclinación.
+  &__title {
+    display: grid;
+    justify-items: start;
+    margin-bottom: 32px;
+    font-size: clamp(72px, 11vw, 180px);
+
+    @include until-tablet {
+      margin-bottom: 24px;
+    }
+  }
+
+  &__title-line {
+    color: var(--cal);
+  }
+
+  &__card-wrap {
+    max-width: 440px;
+  }
+
+  // Tarjeta en barro: se separa del fondo sin borde. El formulario no se inclina.
+  &__card {
+    display: grid;
+    gap: 24px;
+    padding: 24px;
+    background: var(--barro);
+
+    @include until-tablet {
+      padding: 16px;
+    }
+  }
+
+  &__routes {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  &__chip {
+    position: relative;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 16px;
+    border: 2px solid transparent;
+    background: var(--tierra);
+    color: var(--cal);
+    transition:
+      background-color 160ms ease-out,
+      border-color 160ms ease-out;
+
+    &:hover {
+      border-color: var(--cal-sucia);
+    }
+
+    // Chip activo: se "prende" con borde teja viva y un temblor corto.
+    &:has(:checked) {
+      border-color: var(--teja-viva);
+      background: var(--barro);
+      @include motion-tremor(120ms, 2px);
+    }
+
+    &:has(:focus-visible) {
+      outline: 3px solid var(--cal);
+      outline-offset: 3px;
+    }
+  }
+
+  &__chip-input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  &__chip-swatch {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--cal);
+    background: var(--terrain);
+  }
+
+  &__chip-text {
+    display: grid;
+  }
+
+  &__chip-name {
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  &__chip-meta {
+    @include data-label(12px);
+    margin-top: 4px;
+    color: var(--cal-sucia);
+    text-transform: none;
+  }
+
+  &__fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  &__field {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+  }
+
+  &__field-label {
+    @include data-label(12px);
+    color: var(--cal-sucia);
+  }
+
+  &__input {
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 2px solid transparent;
+    background: var(--tierra);
+    color: var(--cal);
+    color-scheme: dark;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 16px;
+
+    &--quantity {
+      text-align: center;
+      appearance: textfield;
+
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        appearance: none;
+      }
+    }
+  }
+
+  &__stepper {
+    display: flex;
+  }
+
+  &__stepper-button {
+    flex: none;
+    width: 44px;
+    border: 2px solid transparent;
+    background: var(--tierra);
+    color: var(--cal);
+    font-size: 22px;
+    transition: background-color 160ms ease-out;
+
+    &:hover {
+      border-color: var(--cal-sucia);
+      background: var(--barro);
+    }
+  }
+
+  &__total {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    align-items: baseline;
+  }
+
+  &__total-value {
+    --odometer-height: 1.25em;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: clamp(32px, 3vw, 44px);
+    font-weight: 500;
+  }
+
+  &__total-note {
+    color: var(--cal-sucia);
+    font-size: 14px;
+  }
+
+  &__submit {
+    width: 100%;
+
+    @include until-tablet {
+      position: sticky;
+      bottom: 16px;
+      z-index: 5;
+    }
+  }
+}
+
+@keyframes booking-frame-change {
+  from {
+    scale: 1.12;
+  }
+
+  to {
+    scale: 1;
+  }
+}

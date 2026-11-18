@@ -1,0 +1,24 @@
+---
+import BaseButton from '../base/BaseButton.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const links = [
+  { number: '01', label: 'Rutas', href: '#rutas' },
+  { number: '02', label: 'La máquina', href: '#maquina' },
+  { number: '03', label: 'Cómo funciona', href: '#como-funciona' },
+];
+---
+
+<header class="navbar">
+  <a class="navbar__brand" href="#contenido" aria-label="TROCHA, inicio" style={`--logo: url(${base}/logo.png)`}></a>
+  <nav class="navbar__menu" aria-label="Principal">
+    {links.map(({ number, label, href }) => (
+      <a class="navbar__link" href={href}>
+        <span class="navbar__link-number" aria-hidden="true">{number}</span>
+        <span class="navbar__link-label">{label}</span>
+      </a>
+    ))}
+  </nav>
+  <BaseButton class="navbar__cta" href="#reserva" size="small">Reservar</BaseButton>
+</header>

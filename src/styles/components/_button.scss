@@ -1,0 +1,42 @@
+@use '../abstracts' as *;
+
+// Por defecto, sobre oscuro: teja viva con texto tierra. Sobre claro (--light): teja con texto cal. Nunca se cruzan.
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 12px 24px;
+  background: var(--teja-viva);
+  color: var(--tierra);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 200ms ease-out;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--teja-viva-clara);
+    @include motion-tremor(240ms, 2px);
+  }
+
+  &--light {
+    background: var(--teja);
+    color: var(--cal);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--teja-oscura);
+    }
+  }
+
+  &--small {
+    padding: 8px 16px;
+    font-size: 15px;
+  }
+
+  &--large {
+    min-height: 64px;
+    padding: 20px 32px;
+    font-size: clamp(18px, 1.6vw, 22px);
+  }
+}

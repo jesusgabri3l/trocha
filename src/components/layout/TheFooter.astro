@@ -1,0 +1,14 @@
+---
+import { CREDIT_LINKS } from '../../config/site';
+---
+
+<footer class="footer">
+  <p class="footer__text">Demo de concepto: negocio ficticio en un lugar real. Precios y distancias inventados.</p>
+  <p class="footer__text footer__credit">
+    Diseño y desarrollo: Jesús Gabriel
+    {CREDIT_LINKS.map(({ label, href }) => (
+      <a class="footer__link" href={href} target="_blank" rel="noopener" aria-label={`Jesús Gabriel en ${label} (abre en una pestaña nueva)`}>{label}</a>
+    ))}
+  </p>
+  <p class="footer__mark" aria-hidden="true"></p>
+</footer>

@@ -1,0 +1,33 @@
+---
+const steps = [
+  { title: 'Llegas a la plaza', text: 'Nos encontramos en la Plaza Mayor de Villa de Leyva a la hora de tu reserva.' },
+  { title: 'Te enseñamos 15 minutos', text: 'Aprendes lo básico con calma: arrancar, frenar y tomar curvas. No necesitas experiencia.' },
+  { title: 'Sales con guía', text: 'Un guía va adelante todo el recorrido y te dice dónde parar para las fotos.' },
+] as const;
+const includes = ['Casco', 'Guía', 'Seguro', 'Gasolina'] as const;
+---
+
+<section class="how" id="como-funciona" aria-labelledby="how-title">
+  <div class="how__inner">
+    <h2 class="how__title" id="how-title" data-reveal="launch">Antes de arrancar</h2>
+    <p class="how__lead" data-reveal="up">¿Primera vez en cuatrimoto? Para eso es la clase.</p>
+
+    <ol class="how__steps">
+      {steps.map(({ title, text }, index) => (
+        <li class="how__step" data-reveal="slam" style={`--reveal-delay: ${index * 140}ms`}>
+          <span class="how__step-number" aria-hidden="true" data-odometer={`0${index + 1}`} data-odometer-delay={index * 140 + 200}>0{index + 1}</span>
+          <h3 class="how__step-title">{title}</h3>
+          <p>{text}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div class="how__includes">
+      <span class="how__includes-label">Incluye</span>
+      <ul class="how__stickers">
+        {includes.map((item, index) => <li class="how__sticker" data-reveal="slam-short" style={`--reveal-delay: ${index * 60}ms`}>{item}</li>)}
+      </ul>
+    </div>
+    <p class="how__requirement" data-reveal="up">El conductor debe ser mayor de 18 y llevar su cédula.</p>
+  </div>
+</section>

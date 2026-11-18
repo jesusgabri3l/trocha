@@ -1,0 +1,135 @@
+@use '../abstracts' as *;
+
+// Antes de arrancar (ruptura 3): cal, borde superior diagonal a 3° en sentido contrario al de la máquina (zigzag).
+// La pizarra 03 se sale por el borde inferior hacia la reserva.
+.how {
+  position: relative;
+  color: var(--tierra);
+  @include diagonal-top(false);
+
+  &::before {
+    background: var(--cal);
+  }
+
+  &__inner {
+    position: relative;
+    z-index: 3;
+    min-height: 90svh;
+    padding: calc(var(--cut) + 64px) 6vw 24px;
+  }
+
+  &__title {
+    max-width: 10ch;
+  }
+
+  &__lead {
+    margin-top: 16px;
+    font-size: clamp(22px, 2.2vw, 32px);
+    font-weight: 900;
+    line-height: 1.1;
+  }
+
+  &__steps {
+    display: grid;
+    gap: 24px;
+    margin: 48px 0;
+
+    @include from-tablet {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+  }
+
+  // Pizarra de pits: un dato por tablero, número enorme, tierra con letra cal.
+  &__step {
+    padding: 24px;
+    background: var(--tierra);
+    color: var(--cal);
+
+    @include from-tablet {
+      &:nth-child(1) {
+        rotate: -1.5deg;
+      }
+
+      &:nth-child(2) {
+        rotate: 1deg;
+      }
+
+      &:nth-child(3) {
+        position: relative;
+        top: 64px;
+        z-index: 7; // por delante de la reserva
+        rotate: -1deg;
+      }
+    }
+
+    @include until-tablet {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0 16px;
+      align-items: center;
+
+      > :nth-child(n + 2) {
+        grid-column: 2;
+      }
+
+      > :first-child {
+        grid-row: 1 / span 2;
+      }
+    }
+
+    p {
+      color: var(--cal-sucia);
+    }
+  }
+
+  &__step-number {
+    @include display-font(0.8);
+    display: block;
+    color: var(--teja-viva);
+    font-size: clamp(96px, 16vw, 240px);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__step-title {
+    margin: 8px 0;
+    color: var(--cal);
+  }
+
+  &__includes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    align-items: center;
+  }
+
+  &__includes-label {
+    @include data-label(13px);
+  }
+
+  &__stickers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    @include until-tablet {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+    }
+  }
+
+  // Calcomanía: fondo tierra, texto cal, mono.
+  &__sticker {
+    @include data-label(13px);
+    padding: 8px 16px;
+    background: var(--tierra);
+    color: var(--cal);
+    text-align: center;
+  }
+
+  &__requirement {
+    margin-top: 16px;
+    color: var(--tierra-suave);
+  }
+}

@@ -1,0 +1,15 @@
+---
+import type { Route } from '../../data/routes';
+
+interface Props {
+  route: Route;
+  isStatic?: boolean;
+}
+
+const { route, isStatic = false } = Astro.props;
+---
+
+<div class:list={['journey-banner', isStatic && 'journey-banner--static']} data-route={route.id} {...(isStatic ? {} : { 'data-route-banner': route.id })}>
+  <p class="journey-banner__label">RUTA {route.number}</p>
+  <h2 class="journey-banner__name">{route.name}</h2>
+</div>

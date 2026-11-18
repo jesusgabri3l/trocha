@@ -1,0 +1,137 @@
+@use '../abstracts' as *;
+
+// Vocabulario de movimiento (design-brief v2). Cada mixin vive en abstracts/_mixins.scss; aquí los cuadros clave.
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes launch-clip {
+  from {
+    clip-path: inset(-20% 100% -20% 0);
+    translate: -0.15em 0;
+  }
+
+  to {
+    clip-path: inset(-20%);
+    translate: 0 0;
+  }
+}
+
+@keyframes launch-settle {
+  35% {
+    transform: scaleY(0.92);
+  }
+
+  70% {
+    transform: scaleY(1.03);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes slam-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-48px) rotate(-5deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes slam-drop-short {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes slam-hit {
+  0% {
+    scale: 1 0.97;
+    translate: 0 0;
+  }
+
+  25% {
+    scale: 1 0.985;
+    translate: 3px 0;
+  }
+
+  50% {
+    scale: 1 1;
+    translate: -3px 0;
+  }
+
+  75% {
+    translate: 2px 0;
+  }
+
+  100% {
+    scale: 1 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes tremor {
+  0% {
+    translate: var(--shake) calc(var(--shake) * -1);
+  }
+
+  25% {
+    translate: calc(var(--shake) * -1) var(--shake);
+  }
+
+  50% {
+    translate: var(--shake) var(--shake);
+  }
+
+  75% {
+    translate: calc(var(--shake) * -1) calc(var(--shake) * -1);
+  }
+
+  100% {
+    translate: 0 0;
+  }
+}
+
+// Entrada de bloques al llegar a la pantalla (reveal.ts pone data-revealed). Sin JS todo queda visible.
+// data-reveal = launch (M1) | slam (M2) | slam-short | up (fade-up del texto). --reveal-delay escalona.
+.has-reveal [data-reveal] {
+  &:not([data-revealed]) {
+    opacity: 0;
+  }
+
+  &[data-revealed='']:is([data-reveal='launch']) {
+    @include motion-launch(var(--reveal-delay, 0ms));
+  }
+
+  &[data-revealed='']:is([data-reveal='slam']) {
+    @include motion-slam(var(--reveal-delay, 0ms));
+  }
+
+  &[data-revealed='']:is([data-reveal='slam-short']) {
+    @include motion-slam-short(var(--reveal-delay, 0ms));
+  }
+
+  &[data-revealed='']:is([data-reveal='up']) {
+    @include fade-up(300ms, var(--reveal-delay, 80ms));
+  }
+}

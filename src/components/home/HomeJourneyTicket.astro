@@ -1,0 +1,57 @@
+---
+import { formatPrice, type Route } from '../../data/routes';
+
+interface Props {
+  route: Route;
+  isStatic?: boolean;
+  hasNext?: boolean;
+}
+
+const { route, isStatic = false, hasNext = false } = Astro.props;
+const trackedAttributes = isStatic ? {} : { 'data-route-ticket': route.id };
+---
+
+<article
+  class:list={['journey-ticket', isStatic && 'journey-ticket--static']}
+  data-route={route.id}
+  aria-label={`Ruta ${route.number} ${route.name} hasta ${route.destination}`}
+  {...trackedAttributes}
+>
+  <p class="journey-ticket__trip">
+    <span class="journey-ticket__stop"><span class="journey-ticket__label">INICIO</span> Plaza Mayor</span>
+    <span class="journey-ticket__stop"><span class="journey-ticket__label">LLEGADA</span> {route.destination}</span>
+  </p>
+
+  <svg class="journey-ticket__map" viewBox="0 0 200 120" role="img" aria-label={`Minimapa de la ruta ${route.name}`}>
+    <path class="journey-ticket__trail-base" d={route.trail} />
+    <path class="journey-ticket__trail" d={route.trail} pathLength="1" data-ticket-trail />
+    <circle class="journey-ticket__pin journey-ticket__pin--start" cx={route.start[0]} cy={route.start[1]} r="6" />
+    <circle class="journey-ticket__pin journey-ticket__pin--end" cx={route.end[0]} cy={route.end[1]} r="7" />
+  </svg>
+
+  <dl class="journey-ticket__data">
+    <div><dt>Distancia</dt><dd>{route.distance}</dd></div>
+    <div><dt>Duración</dt><dd>{route.duration}</dd></div>
+  </dl>
+
+  <ul class="journey-ticket__includes" aria-label="Incluye">
+    <li>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15a9 9 0 0 1 18 0v2H3zM12 6v5M3 17h18l-1 3H8" /></svg>
+      Casco
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="6" r="3" /><path d="M6 21v-3a6 6 0 0 1 12 0v3" /></svg>
+      Guía
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z" /><path d="M8.5 12l2.5 2.5 4.5-5" /></svg>
+      Seguro
+    </li>
+  </ul>
+
+  <p class="journey-ticket__price">{formatPrice(route.price)} <span>por cuatrimoto (hasta 2 personas)</span></p>
+  <div class="journey-ticket__actions">
+    <a class="button button--small journey-ticket__action" href="#reserva" data-reserve-route={route.id}>Reservar esta ruta</a>
+    {!isStatic && hasNext && <button class="journey-ticket__next" type="button" data-next-route>Ver siguiente ruta →</button>}
+  </div>
+</article>

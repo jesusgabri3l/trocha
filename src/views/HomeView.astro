@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TheNavbar from '../components/layout/TheNavbar.astro';
+import TheFooter from '../components/layout/TheFooter.astro';
+import HomeHero from '../components/home/HomeHero.astro';
+import HomeJourney from '../components/home/HomeJourney.astro';
+import HomeMachine from '../components/home/HomeMachine.astro';
+import HomeHowItWorks from '../components/home/HomeHowItWorks.astro';
+import HomeBooking from '../components/home/HomeBooking.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout title={SITE.title} description={SITE.description}>
+  <TheNavbar />
+  <main id="contenido">
+    <HomeHero />
+    <HomeJourney />
+    <HomeMachine />
+    <HomeHowItWorks />
+    <HomeBooking />
+  </main>
+  <TheFooter />
+</BaseLayout>
+
+<script>
+  import '../scripts/home';
+</script>

@@ -1,0 +1,66 @@
+---
+import { ROUTES, formatPrice } from '../../data/routes';
+import { SITE } from '../../config/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const [firstRoute] = ROUTES;
+const defaultMessage = `Hola TROCHA, quiero reservar la ruta ${firstRoute!.number} ${firstRoute!.name} (${firstRoute!.destination}) para 1 cuatrimoto. Fecha por definir.`;
+const defaultWhatsappUrl = `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(defaultMessage)}`;
+---
+
+<section class="booking" id="reserva" data-booking aria-labelledby="booking-title">
+  <div class="booking__photo">
+    <picture>
+      <source media="(max-width: 767px)" srcset={`${base}/img/reserva-m.webp`} />
+      <img class="booking__photo-image" src={`${base}/img/reserva.webp`} alt="Cuatrimoto derrapando en una curva de arcilla, con la tierra volando hacia la cámara" width="1600" height="900" loading="lazy" decoding="async" />
+    </picture>
+  </div>
+
+  <div class="booking__body">
+    <h2 class="booking__title" id="booking-title">
+      <span class="booking__title-line" data-reveal="launch">Escoge</span>
+      <span class="booking__title-line" data-reveal="launch" style="--reveal-delay: 120ms">tu ruta</span>
+    </h2>
+
+    <div class="booking__card-wrap">
+      <form class="booking__card" data-booking-form data-reveal="slam">
+        <fieldset class="booking__routes">
+          <legend class="sr-only">Ruta</legend>
+          {ROUTES.map((route, index) => (
+            <label class="booking__chip" data-route={route.id}>
+              <input class="booking__chip-input" type="radio" name="route" value={route.id} checked={index === 0} data-price={route.price} data-label={`${route.number} ${route.name} (${route.destination})`} />
+              <span class="booking__chip-swatch" aria-hidden="true"></span>
+              <span class="booking__chip-text">
+                <span class="booking__chip-name">Ruta {route.number} · {route.name}</span>
+                <span class="booking__chip-meta">{route.destination} · {formatPrice(route.price)}</span>
+              </span>
+            </label>
+          ))}
+        </fieldset>
+
+        <div class="booking__fields">
+          <label class="booking__field">
+            <span class="booking__field-label">Fecha</span>
+            <input class="booking__input" type="date" name="date" data-booking-date />
+          </label>
+          <div class="booking__field">
+            <label class="booking__field-label" for="booking-quantity">Cuatrimotos</label>
+            <div class="booking__stepper">
+              <button class="booking__stepper-button" type="button" data-step="-1" aria-label="Una cuatrimoto menos">−</button>
+              <input class="booking__input booking__input--quantity" id="booking-quantity" type="number" name="quantity" min="1" max="8" value="1" inputmode="numeric" data-booking-quantity />
+              <button class="booking__stepper-button" type="button" data-step="1" aria-label="Una cuatrimoto más">+</button>
+            </div>
+          </div>
+        </div>
+
+        <p class="booking__total">
+          <span class="booking__field-label">Total</span>
+          <output class="booking__total-value" data-booking-total aria-live="polite">{formatPrice(firstRoute!.price)}</output>
+          <span class="booking__total-note">Hasta 2 personas por cuatrimoto.</span>
+        </p>
+
+        <a class="button button--large booking__submit" href={defaultWhatsappUrl} target="_blank" rel="noopener" data-booking-whatsapp>Reservar por WhatsApp<span class="sr-only"> (abre en una pestaña nueva)</span></a>
+      </form>
+    </div>
+  </div>
+</section>

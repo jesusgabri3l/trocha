@@ -1,0 +1,38 @@
+@use '../abstracts' as *;
+
+// Odómetro: cada dígito sube en su columna (odometer.ts arma las columnas y mueve --digit).
+.odometer {
+  --odometer-height: 0.95em;
+  display: inline-flex;
+  vertical-align: bottom;
+
+  &__digit {
+    display: inline-block;
+    height: var(--odometer-height);
+    overflow: hidden;
+    line-height: var(--odometer-height);
+  }
+
+  &__strip {
+    display: flex;
+    flex-direction: column;
+    transform: translateY(calc(var(--digit, 0) * var(--odometer-height) * -1));
+    transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    @include reduced-motion {
+      transition: none;
+    }
+
+    > span {
+      height: var(--odometer-height);
+      line-height: var(--odometer-height);
+    }
+  }
+
+  &__char {
+    display: inline-block;
+    height: var(--odometer-height);
+    line-height: var(--odometer-height);
+    white-space: pre;
+  }
+}

@@ -26,8 +26,9 @@ export async function startJourney() {
 
   const sequence = new FrameSequence(canvas, segments);
   await sequence.prepare();
-  // R1 se pide cuando el navegador esté libre (el hero ya cargó lo suyo); los demás, al entrar al capítulo anterior.
-  (window.requestIdleCallback ?? setTimeout)(() => void sequence.loadChapter('r1'));
+  // Todo el recorrido se encola apenas el navegador esté libre: la cola baja primero lo más cercano a donde está el
+  // usuario (el hero va antes mientras se ve), así se aprovecha el tiempo en el hero y el scroll no alcanza la descarga.
+  (window.requestIdleCallback ?? setTimeout)(() => segments.forEach(({ id }) => void sequence.loadChapter(id)));
 
   const starts = segments.map((_, index) => segments.slice(0, index).reduce((sum, { vh }) => sum + vh, 0));
   let chapter = -1;
@@ -56,12 +57,7 @@ export async function startJourney() {
     const peak = segment.peak ?? Math.floor(segment.count / 2);
     if (segment.kind === 'route' && index === chapter && lastFrame >= 0 && lastFrame < peak && frame >= peak) shakeCanvas();
     lastFrame = frame;
-    if (index !== chapter) {
-      chapter = index;
-      void sequence.loadChapter(segment.id);
-      // Las dos siguientes: los túneles son cortos y en móvil un scroll rápido alcanza la ruta antes de que cargue.
-      for (const next of segments.slice(index + 1, index + 3)) void sequence.loadChapter(next.id);
-    }
+    chapter = index;
 
     // El color de terreno cambia solo en el cuadro más oscuro del túnel.
     const isRoute = segment.kind === 'route';

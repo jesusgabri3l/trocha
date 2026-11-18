@@ -11,8 +11,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <div class="hero__window">
         <!-- Primer cuadro en HTML: se ve antes de que cargue el JS (LCP / Speed Index); el canvas lo tapa al pintar. -->
         <picture>
-          <source media={MOBILE_QUERY} srcset={`${base}/frames/mobile/hero/0000.webp`} />
-          <img class="hero__video" src={`${base}/frames/desktop/hero/0000.webp`} alt="" width="1920" height="1080" fetchpriority="high" />
+          <source media={MOBILE_QUERY} srcset={`${base}/frames/mobile/hero/0000.avif`} />
+          <img class="hero__video" src={`${base}/frames/desktop/hero/0000.avif`} alt="" width="1920" height="1080" fetchpriority="high" />
         </picture>
         <canvas class="hero__video hero__video--canvas" data-hero-canvas aria-hidden="true"></canvas>
       </div>

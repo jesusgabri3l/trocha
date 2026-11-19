@@ -24,14 +24,14 @@
         "id": "r1",
         "kind": "route",
         "count": 120,
-        "vh": 200,
+        "vh": 280,
         "peak": 30
       },
       {
         "id": "t1",
         "kind": "tunnel",
         "count": 60,
-        "vh": 70,
+        "vh": 100,
         "from": "r1",
         "to": "r2",
         "darkest": 42
@@ -40,14 +40,14 @@
         "id": "r2",
         "kind": "route",
         "count": 108,
-        "vh": 200,
+        "vh": 280,
         "peak": 54
       },
       {
         "id": "t2",
         "kind": "tunnel",
         "count": 60,
-        "vh": 70,
+        "vh": 100,
         "from": "r2",
         "to": "r4",
         "darkest": 32
@@ -56,7 +56,7 @@
         "id": "r4",
         "kind": "route",
         "count": 120,
-        "vh": 200,
+        "vh": 280,
         "peak": 104
       }
     ]

@@ -47,7 +47,7 @@ const year = new Date().getFullYear();
     <p class="footer__credit">
       Diseño y desarrollo: Jesús Gabriel
       {CREDIT_LINKS.map(({ label, href }) => (
-        <a class="footer__link" href={href} target="_blank" rel="noopener" aria-label={`Jesús Gabriel en ${label} (abre en una pestaña nueva)`}>{label}</a>
+        <a class="footer__link" href={href} target="_blank" rel="noopener" data-goatcounter-click={`click-${label.toLowerCase()}`} aria-label={`Jesús Gabriel en ${label} (abre en una pestaña nueva)`}>{label}</a>
       ))}
     </p>
   </div>

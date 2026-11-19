@@ -37,6 +37,21 @@ const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebS
     <meta name="generator" content={Astro.generator} />
     <script type="application/ld+json" set:html={jsonLd} />
     <script is:inline data-goatcounter="https://trocha.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+    <script is:inline>
+      // Scroll depth: one GoatCounter event per milestone per visit
+      (() => {
+        const pending = [25, 50, 75, 100];
+        const onScroll = () => {
+          const max = document.documentElement.scrollHeight - innerHeight;
+          const pct = max > 0 ? (scrollY / max) * 100 : 100;
+          while (pending.length && pct >= pending[0] - 1 && window.goatcounter?.count) {
+            window.goatcounter.count({ path: `scroll-${pending.shift()}`, title: 'Scroll depth', event: true });
+          }
+          if (!pending.length) removeEventListener('scroll', onScroll);
+        };
+        addEventListener('scroll', onScroll, { passive: true });
+      })();
+    </script>
     <Font cssVariable="--font-display" preload />
     <Font cssVariable="--font-body" preload />
     <Font cssVariable="--font-mono" />

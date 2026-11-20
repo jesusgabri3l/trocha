@@ -8,7 +8,7 @@ const MAX_DOWNLOADS = 6;
 // del hilo principal). Decodificar todo pesaría cientos de MB y Safari en iOS recarga la pestaña.
 const DECODED_RADIUS = 10;
 // Pocas decodificaciones a la vez, siempre la más cercana al cuadro actual: con scroll rápido no se gasta CPU en
-// cuadros que ya quedaron atrás (a 1920 px cada una pesa).
+// cuadros que ya quedaron atrás (a 1280 px cada una todavía pesa).
 const MAX_DECODES = 3;
 
 export const currentDevice = (): Device => (window.matchMedia(MOBILE_QUERY).matches ? 'mobile' : 'desktop');

@@ -30,7 +30,7 @@
       background:
         linear-gradient(to bottom, rgb(31 26 21 / 0.9), transparent calc(var(--navbar-height) * 3)),
         linear-gradient(to top, rgb(31 26 21 / 0.9), transparent 45%),
-        rgb(20 16 12 / 0.35); // filtro negro: unifica el tono del video con la página
+        rgb(20 16 12 / 0.45); // filtro negro: unifica el tono del video con la página
       pointer-events: none;
 
       // Móvil: el nombre de la ruta cae sobre el cielo; el oscurecido de arriba baja más para que se lea.
@@ -38,7 +38,7 @@
         background:
           linear-gradient(to bottom, rgb(31 26 21 / 0.9), transparent calc(var(--navbar-height) * 6.5)),
           linear-gradient(to top, rgb(31 26 21 / 0.9), transparent 45%),
-          rgb(20 16 12 / 0.35);
+          rgb(20 16 12 / 0.45);
       }
     }
   }

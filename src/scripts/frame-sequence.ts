@@ -24,8 +24,8 @@ interface DownloadJob {
 const pending: DownloadJob[] = [];
 let activeDownloads = 0;
 let activeSequence: FrameSequence | undefined;
-// Mientras la pantalla de carga espera: primero los "1 de cada 4" de hero y recorrido por igual (lo que ella espera),
-// después el resto. Luego vuelve a priorizar la secuencia que se está viendo.
+// Mientras la pantalla de carga espera: hero y recorrido por igual, del primer cuadro en adelante (ella espera la
+// primera mitad de R1 completa). Luego vuelve a priorizar la secuencia que se está viendo.
 let loading = false;
 export const preferCoarseFrames = (on: boolean) => {
   loading = on;
@@ -35,7 +35,7 @@ export const frameEvents = new EventTarget();
 const cost = ({ sequence, index }: DownloadJob) => {
   const distance = index - sequence.position;
   const steps = distance >= 0 ? distance : -distance * 2; // lo de adelante pesa la mitad que lo de atrás
-  if (loading) return steps * (index % LOAD_STEP === 0 ? 1 : 1000);
+  if (loading) return steps;
   return (sequence === activeSequence ? 0 : 1e6) + steps * (index % LOAD_STEP === 0 ? 1 : 3);
 };
 const pump = () => {
